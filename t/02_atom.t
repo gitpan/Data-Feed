@@ -13,7 +13,7 @@ BEGIN {
                 PeerAddr => 'api.flickr.com',
                 PeerPort => 80
             );
-            if ($socket || !$@) {
+            if ($socket && !$@) {
                 $HAVE_NETWORK = 1;
             }
         };

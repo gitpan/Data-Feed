@@ -9,6 +9,7 @@ requires 'DateTime::Format::Mail';
 requires 'DateTime::Format::W3CDTF';
 requires 'List::Util';
 requires 'Moose', '0.54';
+requires 'URI::Fetch';
 requires 'XML::Atom';
 requires 'XML::RSS';
 recommends 'XML::RSS::LibXML';

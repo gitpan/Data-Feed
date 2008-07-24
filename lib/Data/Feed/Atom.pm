@@ -1,16 +1,28 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom.pm 66807 2008-07-24T12:23:19.849499Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom.pm 66958 2008-07-24T23:29:47.476960Z daisuke  $
 
 package Data::Feed::Atom;
 use Moose;
 use Data::Feed::Atom::Entry;
+use XML::Atom::Feed;
+use XML::Atom::Person;
+use XML::Atom::Util qw( iso2dt );
+use List::Util qw( first );
+use DateTime::Format::W3CDTF;
 
 with 'Data::Feed::Web::Feed';
 
+__PACKAGE__->meta->make_immutable;
+
 no Moose;
 
-sub format { 'Atom' }
+use constant format => 'Atom';
 
-sub title { shift->feed->title(@_) }
+sub title        { shift->feed->title(@_) }
+sub description  { shift->feed->description(@_) }
+sub copyright    { shift->feed->copyright(@_) }
+sub language     { shift->feed->language(@_) }
+sub generator    { shift->feed->generator(@_) }
+
 sub link {
     my $self = shift;
     if (@_) {
@@ -21,10 +33,6 @@ sub link {
         $l ? $l->href : undef;
     }
 }
-sub description { shift->feed->tagline(@_) }
-sub copyright   { shift->feed->copyright(@_) }
-sub language    { shift->feed->language(@_) }
-sub generator   { shift->feed->generator(@_) }
 
 sub author {
     my $self = shift;
@@ -47,18 +55,19 @@ sub modified {
 }
 
 sub entries {
+    my $self = shift;
+
     my @entries;
-    for my $entry ($_[0]->feed->entries) {
+    for my $entry ($self->feed->entries) {
         push @entries, Data::Feed::Atom::Entry->new(entry => $entry);
     }
 
-    @entries;
+    return @entries;
 }
 
 sub add_entry {
-    my $self = shift;
-    my($entry) = @_;
-    $self->feed->add_entry($entry->entry);
+    my ($self, $entry) = @_;
+    return $self->feed->add_entry($entry->entry);
 }
 
 1;

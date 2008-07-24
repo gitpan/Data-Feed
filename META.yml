@@ -23,8 +23,9 @@ requires:
   DateTime::Format::W3CDTF: 0
   List::Util: 0
   Moose: 0.54
+  URI::Fetch: 0
   XML::Atom: 0
   XML::RSS: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.00001
+version: 0.00002

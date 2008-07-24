@@ -1,10 +1,10 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed.pm 66820 2008-07-24T12:50:42.153939Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed.pm 66960 2008-07-24T23:33:24.943063Z daisuke  $
 
 package Data::Feed;
 use Moose;
 use URI::Fetch;
 
-our $VERSION = '0.00001';
+our $VERSION = '0.00002';
 
 has 'parser' => (
     is => 'rw',

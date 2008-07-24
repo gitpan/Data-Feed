@@ -1,0 +1,30 @@
+---
+abstract: 'Extensible Feed Parsing Tool'
+author:
+  - 'Daisuke Maki C<< <daisuke@endeworks.jp> >>'
+build_requires:
+  Test::Compile: 0
+  Test::More: 0
+distribution_type: module
+generated_by: 'Module::Install version 0.76'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Data-Feed
+no_index:
+  directory:
+    - inc
+    - t
+recommends:
+  XML::RSS::LibXML: 0
+requires:
+  DateTime::Format::Mail: 0
+  DateTime::Format::W3CDTF: 0
+  List::Util: 0
+  Moose: 0.54
+  XML::Atom: 0
+  XML::RSS: 0
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.00001

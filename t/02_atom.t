@@ -39,12 +39,17 @@ BEGIN {
 }
 
 SKIP: {
-    skip( "No network connection", 22 );
+    skip( "No network connection", 22 ) unless $HAVE_NETWORK;
     my $url = URI->new('http://api.flickr.com/services/feeds/photos_public.gne');
 
-    my $feed = Data::Feed->parse($url);
+    my $feed = eval {
+        Data::Feed->parse($url);
+    };
+    if ($@ && $@ =~ /Failed to fetch/) {
+        skip( "Failed to fetch rss (skipping for sanity's sake)", 22 );
+    }
 
-    ok( $feed );
+    ok( $feed, "Fetch successful" );
 
     my @entries = $feed->entries;
 

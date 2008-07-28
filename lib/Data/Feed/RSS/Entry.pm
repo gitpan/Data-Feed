@@ -160,13 +160,32 @@ sub enclosures {
             %$enclosure
         );
     }
+    for my $content ($self->media_contents) {
+        push @enclosures, Data::Feed::Web::Enclosure->new(
+            %$content
+        );
+    }
 
     @enclosures;
+}
+
+sub media_contents {
+    my $item = shift->entry;
+
+    my $media_ns = "http://search.yahoo.com/mrss";
+    my $content  = $item->{$media_ns}->{content};
+
+    return () unless $content;
+    ref $content eq 'ARRAY' ?
+        @$content :
+        $content
+    ;
 }
 
 sub __enclosures {
     my $item = shift->entry;
 
+    return () unless $item->{enclosure};
     ref $item->{enclosure} eq 'ARRAY' ?
         @{ $item->{enclosure} } :
         $item->{enclosure}
@@ -197,10 +216,15 @@ Data::Feed::RSS::Entry - An RSS Entry
 
 =head2 link
 
+=head2 media_contents
+
+If the RSS is a MediaRSS, returns a list of media associated with the entry.
+
 =head2 modified
 
 =head2 summary
 
 =head2 title
+
 
 =cut

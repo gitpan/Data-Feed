@@ -3,8 +3,8 @@ abstract: 'Extensible Feed Parsing Tool'
 author:
   - 'Daisuke Maki C<< <daisuke@endeworks.jp> >>'
 build_requires:
-  Test::Compile: 0
   Test::More: 0
+  Test::UseAllModules: 0
 distribution_type: module
 generated_by: 'Module::Install version 0.76'
 license: perl
@@ -26,4 +26,4 @@ requires:
   XML::RSS::LibXML: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.00004
+version: 0.00005

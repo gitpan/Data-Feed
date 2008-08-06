@@ -14,7 +14,7 @@ requires 'XML::Atom';
 requires 'XML::RSS::LibXML';
 
 test_requires('Test::More');
-test_requires('Test::Compile');
+test_requires('Test::UseAllModules');
 
-auto_install;
+auto_include;
 WriteAll;

@@ -1,4 +1,4 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Parser/RSS.pm 66789 2008-07-24T11:49:26.173225Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Parser/RSS.pm 67918 2008-08-06T03:19:45.324161Z daisuke  $
 
 package Data::Feed::Parser::RSS;
 use Moose;
@@ -7,7 +7,9 @@ use Data::Feed::RSS;
 our $PARSER_CLASS;
 
 BEGIN {
-    my @candidates = qw(XML::RSS::LibXML XML::RSS);
+    my @candidates = $ENV{DATA_FEED_RSS_PARSERS} ?
+        split(/\s+/, $ENV{DATA_FEED_RSS_PARSERS}) :
+        qw(XML::RSS::LibXML XML::RSS);
 
     foreach my $module (@candidates) {
         eval { Class::MOP::load_class($module) };
@@ -15,6 +17,10 @@ BEGIN {
 
         $PARSER_CLASS = $module;
         last;
+    }
+
+    if (! $PARSER_CLASS) {
+        confess "Cannot find suitable parser class from @candidates";
     }
 }
 

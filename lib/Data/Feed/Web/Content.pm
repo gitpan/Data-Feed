@@ -1,4 +1,4 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Web/Content.pm 66789 2008-07-24T11:49:26.173225Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Web/Content.pm 67717 2008-08-02T21:56:07.486475Z daisuke  $
 
 package Data::Feed::Web::Content;
 use Moose;
@@ -12,6 +12,8 @@ has 'body' => (
     is => 'rw',
     isa => 'Str',
 );
+
+__PACKAGE__->meta->make_immutable;
 
 no Moose;
 

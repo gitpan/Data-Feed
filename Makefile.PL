@@ -11,8 +11,7 @@ requires 'List::Util';
 requires 'Moose', '0.54';
 requires 'URI::Fetch';
 requires 'XML::Atom';
-requires 'XML::RSS';
-recommends 'XML::RSS::LibXML';
+requires 'XML::RSS::LibXML';
 
 test_requires('Test::More');
 test_requires('Test::Compile');

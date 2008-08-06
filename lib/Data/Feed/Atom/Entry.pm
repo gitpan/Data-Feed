@@ -1,4 +1,4 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom/Entry.pm 66819 2008-07-24T12:49:10.752170Z 33rpm  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom/Entry.pm 67717 2008-08-02T21:56:07.486475Z daisuke  $
 
 package Data::Feed::Atom::Entry;
 use Moose;
@@ -37,8 +37,8 @@ sub summary {
                 $_[0]->body : $_[0]
         );
     } else {
-        Data::Feed::Web::Content->wrap({ type => 'html',
-                                   body => $entry->{entry}->summary });
+        Data::Feed::Web::Content->new( type => 'html',
+                                   body => $entry->{entry}->summary );
     }
 }
 
@@ -62,8 +62,8 @@ sub content {
             $type = 'text/plain' if $type eq 'text';
         }
 
-        Data::Feed::Web::Content->wrap({ type => $type,
-                                   body => $c ? $c->body : undef });
+        Data::Feed::Web::Content->new( type => $type,
+                                   body => $c ? $c->body : undef );
     }
 }
 

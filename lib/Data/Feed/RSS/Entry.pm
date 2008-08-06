@@ -8,6 +8,8 @@ use DateTime::Format::W3CDTF;
 
 with 'Data::Feed::Web::Entry';
 
+__PACKAGE__->meta->make_immutable;
+
 no Moose;
 
 sub title {
@@ -152,7 +154,14 @@ sub modified {
 sub enclosures {
     my $self = shift;
 
-    die if @_;
+    { no warnings 'once';
+        confess "Cannot handle enclosures when used with XML::RSS"
+            if $Data::Feed::Parser::RSS::PARSER_CLASS eq 'XML::RSS';
+    }
+
+    { # XXX - We don't support creating enclosures (yet)
+        confess "Cannot handle creation of enclosures (yet)" if @_;
+    }
 
     my @enclosures;
     for my $enclosure ($self->__enclosures) {

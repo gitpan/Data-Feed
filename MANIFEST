@@ -35,6 +35,7 @@ t/99-pod.t
 t/data/atom-10-example.xml
 t/data/atom-full.xml
 t/data/atom.xml
+t/data/rss-with-media.xml
 t/data/rss10-invalid-date.xml
 t/data/rss10.xml
 t/data/rss20-no-summary.xml

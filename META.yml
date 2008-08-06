@@ -16,8 +16,6 @@ no_index:
   directory:
     - inc
     - t
-recommends:
-  XML::RSS::LibXML: 0
 requires:
   DateTime::Format::Mail: 0
   DateTime::Format::W3CDTF: 0
@@ -25,7 +23,7 @@ requires:
   Moose: 0.54
   URI::Fetch: 0
   XML::Atom: 0
-  XML::RSS: 0
+  XML::RSS::LibXML: 0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.00003
+version: 0.00004

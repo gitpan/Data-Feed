@@ -2,6 +2,7 @@
 
 package Data::Feed::RSS::Entry;
 use Moose;
+use Carp ();
 use Data::Feed::Web::Content;
 use DateTime::Format::Mail;
 use DateTime::Format::W3CDTF;
@@ -155,12 +156,12 @@ sub enclosures {
     my $self = shift;
 
     { no warnings 'once';
-        confess "Cannot handle enclosures when used with XML::RSS"
+        Carp::confess("Cannot handle enclosures when used with XML::RSS")
             if $Data::Feed::Parser::RSS::PARSER_CLASS eq 'XML::RSS';
     }
 
     { # XXX - We don't support creating enclosures (yet)
-        confess "Cannot handle creation of enclosures (yet)" if @_;
+        Carp::confess("Cannot handle creation of enclosures (yet)") if @_;
     }
 
     my @enclosures;

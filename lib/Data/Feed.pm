@@ -1,10 +1,13 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed.pm 67929 2008-08-06T04:44:30.199544Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed.pm 72461 2008-09-08T14:48:36.116658Z daisuke  $
 
 package Data::Feed;
 use Moose;
+use Carp();
+use Scalar::Util ();
 use URI::Fetch;
 
-our $VERSION = '0.00005';
+our $VERSION = '0.00006';
+our $AUTHORITY = 'cpan:DMAKI';
 
 has 'parser' => (
     is => 'rw',
@@ -18,12 +21,12 @@ no Moose;
 sub parse {
     my ($self, $stream) = @_;
 
-    if (! blessed $self) {
+    if (! Scalar::Util::blessed($self) ){
         $self = $self->new();
     }
 
     if (! $stream) {
-        confess "No stream to parse was provided to parse()";
+        Carp::confess("No stream to parse was provided to parse()");
     }
 
     my $content_ref = $self->fetch_stream($stream);
@@ -38,7 +41,7 @@ sub parse {
     $parser = $self->find_parser( $content_ref );
 
     if (! $parser) {
-        confess "Failed to find a suitable parser";
+        Carp::confess("Failed to find a suitable parser");
     }
 
     return $parser->parse( $content_ref );
@@ -49,10 +52,10 @@ sub find_parser {
 
     my $format = $self->guess_format($content_ref);
     if (! $format) {
-        confess "Unable to guess format from stream content";
+        Carp::confess("Unable to guess format from stream content");
     }
 
-    my $class = join( '::', blessed $self, 'Parser', $format );
+    my $class = join( '::', Scalar::Util::blessed($self), 'Parser', $format );
 
     Class::MOP::load_class($class);
 
@@ -66,7 +69,7 @@ sub guess_format {
     # to breakage, but then again we don't want to parse the whole
     # feed ourselves.
 
-    # XXX - Make this extensible!
+    # XXX - Make this extendable!
 
     { 
         my $tag;
@@ -98,21 +101,21 @@ sub fetch_stream {
     my ($self, $stream) = @_;
 
     my $content = '';
-    my $ref = blessed $stream || '';
+    my $ref = Scalar::Util::blessed($stream) || '';
     if (! $ref ) {
         # if given a string, it's a filename
         open( my $fh, '<', $stream )
-            or confess "Could not open file $stream: $!";
+            or Carp::confess("Could not open file $stream: $!");
         $content = do { local $/; <$fh> };
         close $fh;
     } else {
         if ( $stream->isa('URI') ) {
             # XXX - Shouldn't using LWP suffice here?
             my $res = URI::Fetch->fetch($stream)
-                or confess "Failed to fetch URI $stream: " . URI::Fetch->errstr;
+                or Carp::confess("Failed to fetch URI $stream: " . URI::Fetch->errstr);
 
             if ( $res->status == URI::Fetch::URI_GONE() ) {
-                confess "This feed has been permanently removed";
+                Carp::confess("This feed has been permanently removed");
             }
             $content = $res->content;
         } elsif ( $stream->isa('SCALAR') ) {
@@ -120,7 +123,7 @@ sub fetch_stream {
         } elsif ( $stream->isa('GLOB') ) {
             $content = do { local $/; <$stream> };
         } else {
-            confess "Don't know how to fetch '$ref'";
+            Carp::confess("Don't know how to fetch '$ref'");
         }
     }
 
@@ -165,11 +168,49 @@ What, another XML::Feed? Yes, but this time it's extensible. It's cleanly
 OO (until you get down to the XML nastiness), and it's easy to add your own
 parser to do whatever you want it to do.
 
+=head1 STRUCTURE
+
+Data::Feed has a fairly simple structure. The first layer is a "dynamic"
+parser -- "dynamic" in that Data::Feed will try to find what the feed is,
+and then create the appropriate parser to parse it.
+
+This is done in Data::Feed->find_parser() and Data::Feed->guess_format().
+By default we recognize RSS and Atom feeds. Should the need arise to 
+either provide a custom parser or to provide more refined logic to find a
+parser type, override the respective method and do what you will with it.
+
+The second layer is a thin wrapper around RSS and Atom feed objects.
+We use XML::RSS::LibXML (or XML::RSS) and XML::Atom for this purpose.
+
+=head1 PARSING FEEDS
+
+Data::Feed can parse files, URIs, raw strings, and file handles. All you need
+to do is to pass an appropriate parameters.
+
+For file names, we expect a plain scalar:
+
+  Data::Feed->parse( '/path/to/feed.xml' );
+
+For URI (which we will fetch via URI::Fetch), pass in an URI object:
+
+  Data::Feed->parse( URI->new("http://example.com/feed.xml") );
+
+For raw strings, pass in a scalar ref:
+
+  Data::Feed->parse( \qq{<?xml version="1.0"><feed> .... </feed>} );
+
+For file handles, pass in a glob:
+
+  open(my $fh, '<', '/path/to/feed.xml' );
+  Data::Feed->parse( $fh );
+
 =head1 METHODS
 
 =head2 parse($stream)
 
 =head2 find_parser($stream)
+
+Attempts to find an appropriate parser for the given stream.
 
 =head2 guess_format($stream)
 

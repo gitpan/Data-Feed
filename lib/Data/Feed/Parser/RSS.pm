@@ -1,8 +1,9 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Parser/RSS.pm 67918 2008-08-06T03:19:45.324161Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Parser/RSS.pm 72460 2008-09-08T14:47:34.852472Z daisuke  $
 
 package Data::Feed::Parser::RSS;
 use Moose;
 use Data::Feed::RSS;
+use Carp();
 
 our $PARSER_CLASS;
 
@@ -20,7 +21,7 @@ BEGIN {
     }
 
     if (! $PARSER_CLASS) {
-        confess "Cannot find suitable parser class from @candidates";
+        Carp::confess("Cannot find suitable parser class from @candidates");
     }
 }
 
@@ -46,6 +47,16 @@ __END__
 =head1 NAME
 
 Data::Feed::Parser::RSS - Data::Feed RSS Parser
+
+=head1 DESCRIPTION
+
+Attempts to parse the given scalar reference (which should contain a valid
+RSS xml), using either XML::RSS::LibXML or XML::RSS (whichever one that is
+found first will be used)
+
+As of this writing, XML::RSS has some limitations (particularly with enclosures)
+so, it is best to stick with XML::RSS::LibXML as long as you have libxml2
+and XML::LibXML installed in your system.
 
 =head1 METHODS
 

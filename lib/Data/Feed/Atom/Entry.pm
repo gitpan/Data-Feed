@@ -1,4 +1,4 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom/Entry.pm 67717 2008-08-02T21:56:07.486475Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom/Entry.pm 88595 2008-10-20T16:13:11.386706Z daisuke  $
 
 package Data::Feed::Atom::Entry;
 use Moose;
@@ -17,7 +17,27 @@ __PACKAGE__->meta->make_immutable;
 
 no Moose;
 
-sub title { shift->{entry}->title(@_) }
+BEGIN {
+    my $meta = __PACKAGE__->meta;
+    my %methods = map { ($_ => $_) }
+        qw(title updated);
+    while (my($name, $proxy) = each %methods) {
+        $meta->add_method($name => Moose::Meta::Method->wrap(
+            package_name => __PACKAGE__,
+            name         => $name,
+            body         => sub { shift->entry->$proxy(@_) }
+        ));
+    }
+}
+
+sub BUILDARGS {
+    my $class = shift;
+    my $args  = @_ == 1 ? $_[0] : { @_ };
+
+    $args->{entry} ||= XML::Atom::Entry->new();
+    return $args;
+}
+
 sub link {
     my $entry = shift;
     if (@_) {
@@ -33,7 +53,7 @@ sub summary {
     my $entry = shift;
     if (@_) {
         $entry->{entry}->summary(
-            blessed $_[0] && $_[0]->isa('Data:::Feed::Web::Content') ?
+            (Scalar::Util::blessed($_[0]) || '') eq 'Data:::Feed::Web::Content' ?
                 $_[0]->body : $_[0]
         );
     } else {
@@ -81,7 +101,7 @@ sub category {
 sub author {
     my $entry = shift;
     if (@_ && $_[0]) {
-        my $person = XML::Atom::Person->new(Version => 1.0);
+        my $person = XML::Atom::Person->new(Namespace => $entry->entry->ns, Version => 1.0);
         $person->name($_[0]);
         $entry->{entry}->author($person);
     } else {

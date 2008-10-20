@@ -8,7 +8,6 @@ inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
-inc/Test/More.pm
 inc/Test/UseAllModules.pm
 lib/Data/Feed.pm
 lib/Data/Feed/Atom.pm
@@ -32,6 +31,11 @@ t/01_rss.t
 t/02_atom.t
 t/99-pod-coverage.t
 t/99-pod.t
+t/compat/01_parse.t
+t/compat/02_create.t
+t/compat/05_atom10-link.t
+t/compat/06_atom10.t
+t/compat/07_atom10-create.t
 t/data/atom-10-example.xml
 t/data/atom-full.xml
 t/data/atom.xml

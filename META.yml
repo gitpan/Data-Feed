@@ -24,6 +24,7 @@ requires:
   URI::Fetch: 0
   XML::Atom: 0
   XML::RSS::LibXML: 0
+  perl: 5.8.0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.00006
+version: 0.00007

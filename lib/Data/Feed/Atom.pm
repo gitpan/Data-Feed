@@ -1,4 +1,4 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom.pm 66958 2008-07-24T23:29:47.476960Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom.pm 88595 2008-10-20T16:13:11.386706Z daisuke  $
 
 package Data::Feed::Atom;
 use Moose;
@@ -17,11 +17,27 @@ no Moose;
 
 use constant format => 'Atom';
 
-sub title        { shift->feed->title(@_) }
-sub description  { shift->feed->description(@_) }
-sub copyright    { shift->feed->copyright(@_) }
-sub language     { shift->feed->language(@_) }
-sub generator    { shift->feed->generator(@_) }
+BEGIN {
+    my $meta = __PACKAGE__->meta;
+    my %methods = map { ($_ => $_) }
+        qw(title copyright language generator id updated tagline as_xml);
+    $methods{description} = 'tagline';
+    while (my($name, $proxy) = each %methods) {
+        $meta->add_method($name => Moose::Meta::Method->wrap(
+            package_name => __PACKAGE__,
+            name         => $name,
+            body         => sub { shift->feed->$proxy(@_) }
+        ));
+    }
+}
+
+sub BUILDARGS {
+    my $class = shift;
+    my $args  = @_ == 1 ? $_[0] : { @_ };
+
+    $args->{feed} ||= XML::Atom::Feed->new;
+    return $args;
+}
 
 sub link {
     my $self = shift;
@@ -37,11 +53,12 @@ sub link {
 sub author {
     my $self = shift;
     if (@_ && $_[0]) {
-        my $person = XML::Atom::Person->new(Version => 1.0);
+        my $person = XML::Atom::Person->new(Namespace => $self->feed->ns, Version => 1.0);
         $person->name($_[0]);
         $self->feed->author($person);
     } else {
-        $self->feed->author ? $self->feed->author->name : undef;
+        my $person = $self->feed;
+        return $person->author ? $person->author->name : ();
     }
 }
 

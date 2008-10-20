@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.00007 - 21 Oct 2008
+  - Fix a bunch of minor problems.
+    * as_xml() properly implemented
+    * Creating feeds is now much more functional
+    * Add tagline()
+  - Added selected tests fro XML::Feed 0.21 for more coverage
+
 0.00006 - 08 Sep 2008
   - Recent versions of Moose (properly) unimport blessed() and confess(), 
     which breaks my code depending on it.

@@ -1,12 +1,13 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed.pm 72461 2008-09-08T14:48:36.116658Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed.pm 88597 2008-10-20T16:18:11.832660Z daisuke  $
 
 package Data::Feed;
+use 5.008;
 use Moose;
 use Carp();
 use Scalar::Util ();
 use URI::Fetch;
 
-our $VERSION = '0.00006';
+our $VERSION = '0.00007';
 our $AUTHORITY = 'cpan:DMAKI';
 
 has 'parser' => (
@@ -101,7 +102,7 @@ sub fetch_stream {
     my ($self, $stream) = @_;
 
     my $content = '';
-    my $ref = Scalar::Util::blessed($stream) || '';
+    my $ref = ref $stream || '';
     if (! $ref ) {
         # if given a string, it's a filename
         open( my $fh, '<', $stream )
@@ -109,7 +110,7 @@ sub fetch_stream {
         $content = do { local $/; <$fh> };
         close $fh;
     } else {
-        if ( $stream->isa('URI') ) {
+        if ( Scalar::Util::blessed $stream && $stream->isa('URI') ) {
             # XXX - Shouldn't using LWP suffice here?
             my $res = URI::Fetch->fetch($stream)
                 or Carp::confess("Failed to fetch URI $stream: " . URI::Fetch->errstr);
@@ -118,9 +119,9 @@ sub fetch_stream {
                 Carp::confess("This feed has been permanently removed");
             }
             $content = $res->content;
-        } elsif ( $stream->isa('SCALAR') ) {
+        } elsif ( $ref eq 'SCALAR' ) {
             $content = $$stream;
-        } elsif ( $stream->isa('GLOB') ) {
+        } elsif ( $ref eq 'GLOB' ) {
             $content = do { local $/; <$stream> };
         } else {
             Carp::confess("Don't know how to fetch '$ref'");

@@ -16,5 +16,7 @@ requires 'XML::RSS::LibXML';
 test_requires('Test::More');
 test_requires('Test::UseAllModules');
 
-auto_include;
+tests('t/*.t t/*/*.t');
+
+auto_include_deps;
 WriteAll;

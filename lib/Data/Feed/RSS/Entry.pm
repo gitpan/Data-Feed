@@ -6,6 +6,7 @@ use Carp ();
 use Data::Feed::Web::Content;
 use DateTime::Format::Mail;
 use DateTime::Format::W3CDTF;
+use Scalar::Util ();
 
 with 'Data::Feed::Web::Entry';
 
@@ -13,9 +14,18 @@ __PACKAGE__->meta->make_immutable;
 
 no Moose;
 
+sub BUILDARGS {
+    my $class = shift;
+    my $args  = @_ == 1 ? $_[0] : { @_ };
+
+    $args->{entry} ||= {};
+    
+    return $args;
+}
 sub title {
-    my $item = shift->entry;
-    @_ ? $item->{title} = $_[0] : $item->{title};
+    my ($self, @args) = @_;
+    my $item = $self->entry;
+    return @args ? $item->{title} = $args[0] : $item->{title};
 }
 
 sub link {
@@ -34,7 +44,8 @@ sub summary {
     my $item = shift->entry;
 
     if (@_) {
-        $item->{description} = blessed $_[0] eq 'Data::Feed::Web::Content' ?
+        $item->{description} = 
+            (Scalar::Util::blessed($_[0]) || '') eq 'Data::Feed::Web::Content' ?
             $_[0]->body : $_[0];
         ## Because of the logic below, we need to add some dummy content,
         ## so that we'll properly recognize the description we enter as
@@ -50,12 +61,13 @@ sub summary {
         ## full content if the caller expects a summary, so the heuristic is:
         ## if the <entry> contains both a <description> and one of the elements
         ## typically used for the full content, use <description> as summary.
-        my $txt;
+        my $txt = '';
         if ($item->{description} &&
             ($item->{content}{encoded} ||
              $item->{'http://www.w3.org/1999/xhtml'}{body})) {
             $txt = $item->{description};
         }
+
         Data::Feed::Web::Content->new(
             type => 'text/html',
             body => $txt,
@@ -67,7 +79,7 @@ sub content {
     my $item    = shift->entry;
 
     if (@_) {
-        my $c = blessed $_[0] eq 'Data::Feed::Web::Content' ? $_[0]->body : $_[0];
+        my $c = (Scalar::Util::blessed($_[0]) || '') eq 'Data::Feed::Web::Content' ? $_[0]->body : $_[0];
         $item->{content}{encoded} = $c;
     }
     else {
@@ -116,40 +128,41 @@ sub id {
 }
 
 sub issued {
-    my $item = shift->entry;
+    my $self = shift;
+    my $item = $self->entry;
 
     if (@_) {
         $item->{dc}{date} = DateTime::Format::W3CDTF->format_datetime($_[0]);
         $item->{pubDate} = DateTime::Format::Mail->format_datetime($_[0]);
     }
-    else {
-        ## Either of these could die if the format is invalid.
-        my $date;
-        eval {
-            if (my $ts = $item->{pubDate}) {
-                my $parser = DateTime::Format::Mail->new;
-                $parser->loose;
-                $date = $parser->parse_datetime($ts);
-            } elsif ($ts = $item->{dc}{date}) {
-                $date = DateTime::Format::W3CDTF->parse_datetime($ts);
-            }
-        };
-        return $date;
-    }
+
+    ## Either of these could die if the format is invalid.
+    my $date;
+    eval {
+        if (my $ts = $item->{pubDate}) {
+            my $parser = DateTime::Format::Mail->new;
+            $parser->loose;
+            $date = $parser->parse_datetime($ts);
+        } elsif ($ts = $item->{dc}{date}) {
+            $date = DateTime::Format::W3CDTF->parse_datetime($ts);
+        }
+    };
+    return $date;
 }
 
 sub modified {
-    my $item = shift->entry;
+    my $self = shift;
+    my $item = $self->entry;
 
     if (@_) {
         $item->{dcterms}{modified} =
             DateTime::Format::W3CDTF->format_datetime($_[0]);
     }
-    else {
-        if (my $ts = $item->{dcterms}{modified}) {
-            return eval { DateTime::Format::W3CDTF->parse_datetime($ts) };
-        }
+    
+    if (my $ts = $item->{dcterms}{modified}) {
+        return eval { DateTime::Format::W3CDTF->parse_datetime($ts) };
     }
+    return ();
 }
 
 sub enclosures {
@@ -176,7 +189,7 @@ sub enclosures {
         );
     }
 
-    @enclosures;
+    return @enclosures;
 }
 
 sub media_contents {
@@ -186,7 +199,7 @@ sub media_contents {
     my $content  = $item->{$media_ns}->{content};
 
     return () unless $content;
-    ref $content eq 'ARRAY' ?
+    return ref $content eq 'ARRAY' ?
         @$content :
         $content
     ;
@@ -196,7 +209,7 @@ sub __enclosures {
     my $item = shift->entry;
 
     return () unless $item->{enclosure};
-    ref $item->{enclosure} eq 'ARRAY' ?
+    return ref $item->{enclosure} eq 'ARRAY' ?
         @{ $item->{enclosure} } :
         $item->{enclosure}
     ;

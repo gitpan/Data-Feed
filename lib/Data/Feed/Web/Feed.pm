@@ -1,15 +1,15 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Web/Feed.pm 66812 2008-07-24T12:31:04.820139Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Web/Feed.pm 88595 2008-10-20T16:13:11.386706Z daisuke  $
 
 package Data::Feed::Web::Feed;
 use Moose::Role;
 
 has 'feed' => (
     is => 'rw',
-    handles => [ qw(as_string) ]
 );
 
 requires qw(
     add_entry
+    as_xml
     author
     copyright
     description

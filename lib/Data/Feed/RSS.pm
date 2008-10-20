@@ -1,7 +1,8 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/RSS.pm 66813 2008-07-24T12:31:32.951913Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/RSS.pm 88596 2008-10-20T16:14:27.417876Z daisuke  $
 
 package Data::Feed::RSS;
 use Moose;
+use Data::Feed::Parser::RSS;
 use Data::Feed::RSS::Entry;
 use DateTime::Format::Mail;
 use DateTime::Format::W3CDTF;
@@ -12,12 +13,25 @@ __PACKAGE__->meta->make_immutable;
 
 no Moose;
 
-sub format { 'RSS ' . $_[0]->feed->{'version'} }
+sub BUILDARGS {
+    my $class = shift;
+    my $args  = @_ == 1 ? $_[0] : { @_ };
+
+    $args->{feed} ||= $Data::Feed::Parser::RSS::PARSER_CLASS->new(
+        version => '2.0'
+    );
+    
+    return $args;
+}
+
+sub format { 'RSS ' . $_[0]->feed->{version} }
 
 ## The following elements are the same in all versions of RSS.
 sub title       { shift->feed->channel('title', @_) }
 sub link        { shift->feed->channel('link', @_) }
 sub description { shift->feed->channel('description', @_) }
+sub tagline     { shift->feed->channel('description', @_) }
+sub as_xml      { shift->feed->as_string }
 
 ## This is RSS 2.0 only--what's the equivalent in RSS 1.0?
 sub copyright   { shift->feed->channel('copyright', @_) }
@@ -117,6 +131,8 @@ Data::Feed::RSS - RSS Feed
 
 =head2 author
 
+=head2 as_xml
+
 =head2 copyright
 
 =head2 description
@@ -132,6 +148,8 @@ Data::Feed::RSS - RSS Feed
 =head2 link
 
 =head2 modified
+
+=head2 tagline
 
 =head2 title
 

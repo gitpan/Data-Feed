@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use ExtUtils::Manifest qw( maniread );
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 use Exporter;
 
@@ -57,4 +57,4 @@ READ:
 1;
 __END__
 
-#line 124
+#line 112

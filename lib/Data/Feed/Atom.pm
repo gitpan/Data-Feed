@@ -1,7 +1,7 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom.pm 88595 2008-10-20T16:13:11.386706Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom.pm 102544 2009-03-19T08:58:09.853141Z daisuke  $
 
 package Data::Feed::Atom;
-use Moose;
+use Any::Moose;
 use Data::Feed::Atom::Entry;
 use XML::Atom::Feed;
 use XML::Atom::Person;
@@ -13,21 +13,17 @@ with 'Data::Feed::Web::Feed';
 
 __PACKAGE__->meta->make_immutable;
 
-no Moose;
+no Any::Moose;
 
 use constant format => 'Atom';
 
 BEGIN {
-    my $meta = __PACKAGE__->meta;
     my %methods = map { ($_ => $_) }
         qw(title copyright language generator id updated tagline as_xml);
     $methods{description} = 'tagline';
     while (my($name, $proxy) = each %methods) {
-        $meta->add_method($name => Moose::Meta::Method->wrap(
-            package_name => __PACKAGE__,
-            name         => $name,
-            body         => sub { shift->feed->$proxy(@_) }
-        ));
+        no strict 'refs';
+        *{$name} = sub { shift->feed->$proxy(@_) }
     }
 }
 

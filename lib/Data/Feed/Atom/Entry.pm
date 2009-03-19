@@ -1,7 +1,7 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom/Entry.pm 88595 2008-10-20T16:13:11.386706Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Atom/Entry.pm 102544 2009-03-19T08:58:09.853141Z daisuke  $
 
 package Data::Feed::Atom::Entry;
-use Moose;
+use Any::Moose;
 use Data::Feed::Web::Content;
 use List::Util qw( first );
 use XML::Atom::Util qw( iso2dt );
@@ -15,18 +15,14 @@ has '+entry' => (
 
 __PACKAGE__->meta->make_immutable;
 
-no Moose;
+no Any::Moose;
 
 BEGIN {
-    my $meta = __PACKAGE__->meta;
     my %methods = map { ($_ => $_) }
         qw(title updated);
     while (my($name, $proxy) = each %methods) {
-        $meta->add_method($name => Moose::Meta::Method->wrap(
-            package_name => __PACKAGE__,
-            name         => $name,
-            body         => sub { shift->entry->$proxy(@_) }
-        ));
+        no strict 'refs';
+        *{$name} = sub { shift->entry->$proxy(@_) }
     }
 }
 
@@ -66,7 +62,7 @@ sub content {
     my $entry = shift;
     if (@_) {
         my %param;
-        if (blessed $_[0] && $_[0]->isa('Data::Feed::Web::Content')) {
+        if (Scalar::Util::blessed $_[0] && $_[0]->isa('Data::Feed::Web::Content')) {
             %param = (Body => $_[0]->body);
         } else {
             %param = (Body => $_[0]);

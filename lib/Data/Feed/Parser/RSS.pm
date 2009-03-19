@@ -1,7 +1,8 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Parser/RSS.pm 72460 2008-09-08T14:47:34.852472Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Parser/RSS.pm 102545 2009-03-19T09:01:21.269149Z daisuke  $
 
 package Data::Feed::Parser::RSS;
-use Moose;
+use Any::Moose;
+use Data::Feed;
 use Data::Feed::RSS;
 use Carp();
 
@@ -13,7 +14,8 @@ BEGIN {
         qw(XML::RSS::LibXML XML::RSS);
 
     foreach my $module (@candidates) {
-        eval { Class::MOP::load_class($module) };
+        eval { Any::Moose::load_class($module) };
+        warn if &Data::Feed::DEBUG && $@;
         next if $@;
 
         $PARSER_CLASS = $module;
@@ -29,7 +31,7 @@ with 'Data::Feed::Parser';
 
 __PACKAGE__->meta->make_immutable;
 
-no Moose;
+no Any::Moose;
 
 sub parse {
     my ($self, $xmlref) = @_;

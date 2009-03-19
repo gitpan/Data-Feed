@@ -6,7 +6,7 @@ build_requires:
   Test::More: 0
   Test::UseAllModules: 0
 distribution_type: module
-generated_by: 'Module::Install version 0.77'
+generated_by: 'Module::Install version 0.80'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -16,15 +16,17 @@ no_index:
   directory:
     - inc
     - t
+recommends:
+  Moose: 0
 requires:
   DateTime::Format::Mail: 0
   DateTime::Format::W3CDTF: 0
   List::Util: 0
-  Moose: 0.54
+  Mouse: 0
   URI::Fetch: 0
   XML::Atom: 0
   XML::RSS::LibXML: 0
   perl: 5.8.0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.00007
+version: 0.00008

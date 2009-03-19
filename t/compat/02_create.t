@@ -7,7 +7,7 @@ use DateTime;
 
 for my $format (qw( Atom RSS )) {
     my $feed_class = "Data::Feed::$format";
-    Class::MOP::load_class $feed_class;
+    Any::Moose::load_class $feed_class;
 
     my $feed = $feed_class->new();
 
@@ -46,7 +46,7 @@ for my $format (qw( Atom RSS )) {
     ok($feed->as_xml, 'as_xml returns something');
 
     my $entry_class = "${feed_class}::Entry";
-    Class::MOP::load_class $entry_class;
+    Any::Moose::load_class $entry_class;
 
     my $entry = $entry_class->new();
     isa_ok($entry, $entry_class);

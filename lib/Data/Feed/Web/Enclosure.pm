@@ -2,7 +2,7 @@
 
 package Data::Feed::Web::Enclosure;
 
-use Moose;
+use Any::Moose;
 
 has 'url' => (
     is => 'rw',
@@ -22,7 +22,7 @@ has 'type' => (
 
 __PACKAGE__->meta->make_immutable;
 
-no Moose;
+no Any::Moose;
 
 1;
 

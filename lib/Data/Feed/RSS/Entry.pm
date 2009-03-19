@@ -1,7 +1,7 @@
 # $Id$
 
 package Data::Feed::RSS::Entry;
-use Moose;
+use Any::Moose;
 use Carp ();
 use Data::Feed::Web::Content;
 use DateTime::Format::Mail;
@@ -12,7 +12,7 @@ with 'Data::Feed::Web::Entry';
 
 __PACKAGE__->meta->make_immutable;
 
-no Moose;
+no Any::Moose;
 
 sub BUILDARGS {
     my $class = shift;

@@ -1,9 +1,9 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Item.pm 66789 2008-07-24T11:49:26.173225Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Item.pm 102544 2009-03-19T08:58:09.853141Z daisuke  $
 
 package Data::Feed::Item;
-use Moose::Role;
+use Any::Moose '::Role';
 
-no Moose;
+no Any::Moose '::Item';
 
 1;
 

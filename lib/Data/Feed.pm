@@ -1,13 +1,15 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed.pm 88597 2008-10-20T16:18:11.832660Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed.pm 102547 2009-03-19T09:04:15.277006Z daisuke  $
 
 package Data::Feed;
 use 5.008;
-use Moose;
+use Any::Moose;
 use Carp();
 use Scalar::Util ();
 use URI::Fetch;
 
-our $VERSION = '0.00007';
+use constant DEBUG => exists $ENV{DATA_FEED_DEBUG} ? $ENV{DATA_FEED_DEBUG} : 0;
+
+our $VERSION = '0.00008';
 our $AUTHORITY = 'cpan:DMAKI';
 
 has 'parser' => (
@@ -17,7 +19,7 @@ has 'parser' => (
 
 __PACKAGE__->meta->make_immutable;
 
-no Moose;
+no Any::Moose;
 
 sub parse {
     my ($self, $stream) = @_;
@@ -58,7 +60,7 @@ sub find_parser {
 
     my $class = join( '::', Scalar::Util::blessed($self), 'Parser', $format );
 
-    Class::MOP::load_class($class);
+    Any::Moose::load_class($class);
 
     return $class->new();
 }

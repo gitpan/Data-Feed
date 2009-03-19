@@ -1,7 +1,7 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Parser/Atom.pm 66805 2008-07-24T12:19:54.882559Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/Parser/Atom.pm 102544 2009-03-19T08:58:09.853141Z daisuke  $
 
 package Data::Feed::Parser::Atom;
-use Moose;
+use Any::Moose;
 use Data::Feed::Atom;
 use XML::Atom::Feed;
 
@@ -9,7 +9,7 @@ with 'Data::Feed::Parser';
 
 __PACKAGE__->meta->make_immutable;
 
-no Moose;
+no Any::Moose;
 
 sub parse {
     my ($self, $xmlref) = @_;

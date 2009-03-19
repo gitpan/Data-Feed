@@ -1,7 +1,7 @@
-# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/RSS.pm 88596 2008-10-20T16:14:27.417876Z daisuke  $
+# $Id: /mirror/coderepos/lang/perl/Data-Feed/trunk/lib/Data/Feed/RSS.pm 102544 2009-03-19T08:58:09.853141Z daisuke  $
 
 package Data::Feed::RSS;
-use Moose;
+use Any::Moose;
 use Data::Feed::Parser::RSS;
 use Data::Feed::RSS::Entry;
 use DateTime::Format::Mail;
@@ -11,7 +11,7 @@ with 'Data::Feed::Web::Feed';
 
 __PACKAGE__->meta->make_immutable;
 
-no Moose;
+no Any::Moose;
 
 sub BUILDARGS {
     my $class = shift;

@@ -1,7 +1,10 @@
 Changes
 =======
 
-0.00008 
+0.00009 - 20 Mar 2009
+  - No changes to code, just use newer M::I::Any::Moose
+
+0.00008 - 19 Mar 2009
   - Any::Moose me!
 
 0.00007 - 21 Oct 2008

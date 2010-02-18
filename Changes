@@ -1,6 +1,11 @@
 Changes
 =======
 
+0.00011
+  - Tweak regexp (franckcuny)
+  - Use LWP instead of URI::Fetch (franckcuny)
+  - Moose-y fixes (franckcuny)
+
 0.00010 - 31 Jul 2009
   - Allow initialization of fields feed/item
 

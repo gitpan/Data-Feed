@@ -1,15 +1,15 @@
 Changes
 inc/Module/Install.pm
 inc/Module/Install/Any/Moose.pm
+inc/Module/Install/AuthorTests.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
 inc/Module/Install/Fetch.pm
-inc/Module/Install/Include.pm
 inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
+inc/Module/Install/Repository.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
-inc/Test/UseAllModules.pm
 lib/Data/Feed.pm
 lib/Data/Feed/Atom.pm
 lib/Data/Feed/Atom/Entry.pm
@@ -30,8 +30,6 @@ META.yml
 t/00_compile.t
 t/01_rss.t
 t/02_atom.t
-t/99-pod-coverage.t
-t/99-pod.t
 t/compat/01_parse.t
 t/compat/02_create.t
 t/compat/05_atom10-link.t
@@ -45,3 +43,5 @@ t/data/rss10-invalid-date.xml
 t/data/rss10.xml
 t/data/rss20-no-summary.xml
 t/data/rss20.xml
+xt/pod-coverage.t
+xt/pod.t

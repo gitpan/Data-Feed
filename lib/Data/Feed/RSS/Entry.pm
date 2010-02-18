@@ -1,4 +1,3 @@
-# $Id$
 
 package Data::Feed::RSS::Entry;
 use Any::Moose;
@@ -34,6 +33,11 @@ sub link {
     else {
         $item->{link} || $item->{guid};
     }
+}
+
+sub links {
+    my $item = shift->entry;
+    return ( $item->{link} );
 }
 
 sub summary {

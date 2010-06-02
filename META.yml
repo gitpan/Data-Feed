@@ -9,7 +9,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: 6.42
 distribution_type: module
-generated_by: 'Module::Install version 0.92'
+generated_by: 'Module::Install version 0.98'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -24,7 +24,10 @@ recommends:
   Moose: 0
 requires:
   Any::Moose: 0.04
+  DateTime::Format::Flexible: 0
+  DateTime::Format::ISO8601: 0
   DateTime::Format::Mail: 0
+  DateTime::Format::Natural: 0
   DateTime::Format::W3CDTF: 0
   LWP::UserAgent: 0
   List::Util: 0
@@ -34,4 +37,4 @@ requires:
 resources:
   license: http://dev.perl.org/licenses/
   repository: git://github.com//lestrrat/Data-Feed.git
-version: 0.00011
+version: 0.00012

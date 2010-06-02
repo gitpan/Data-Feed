@@ -30,6 +30,7 @@ META.yml
 t/00_compile.t
 t/01_rss.t
 t/02_atom.t
+t/17-date-parsing.t
 t/compat/01_parse.t
 t/compat/02_create.t
 t/compat/05_atom10-link.t

@@ -30,11 +30,10 @@ requires:
   DateTime::Format::Natural: 0
   DateTime::Format::W3CDTF: 0
   LWP::UserAgent: 0
-  List::Util: 0
   Mouse: 0
   XML::Atom: 0
   XML::RSS::LibXML: 0
 resources:
   license: http://dev.perl.org/licenses/
   repository: git://github.com//lestrrat/Data-Feed.git
-version: 0.00012
+version: 0.00013

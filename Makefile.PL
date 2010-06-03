@@ -1,8 +1,3 @@
-sub author_tests  { }
-sub use_test_base { warn "You need to install Test::Base to run make test from git clone" }
-sub readme_from   { }
-sub auto_set_repository { }
-
 use inc::Module::Install;
 
 name('Data-Feed');
@@ -14,7 +9,6 @@ requires 'DateTime::Format::W3CDTF';
 requires 'DateTime::Format::Natural';
 requires 'DateTime::Format::Flexible';
 requires 'DateTime::Format::ISO8601';
-requires 'List::Util';
 requires 'LWP::UserAgent';
 requires 'XML::Atom';
 requires 'XML::RSS::LibXML';

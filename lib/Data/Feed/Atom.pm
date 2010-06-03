@@ -3,19 +3,20 @@ use Any::Moose;
 use Data::Feed::Atom::Entry;
 use XML::Atom::Feed;
 use XML::Atom::Person;
-use List::Util qw( first );
 use DateTime::Format::W3CDTF;
 use constant format => 'Atom';
 
-BEGIN {
-    my %methods = map { ( $_ => $_ ) }
-        qw(title copyright language generator id updated tagline as_xml);
-    $methods{description} = 'tagline';
-    while ( my ( $name, $proxy ) = each %methods ) {
-        __PACKAGE__->meta->add_method(
-            $name => sub { shift->feed->$proxy(@_) } );
-    }
-}
+has feed => (
+    is => 'rw',
+    isa => 'XML::Atom::Feed',
+    handles => {
+        description => 'tagline',
+        map { ( $_ => $_ ) }
+            qw(title copyright language generator id updated tagline as_xml),
+    },
+    required => 1,
+    lazy_build => 1,
+);
 
 with 'Data::Feed::Web::Feed';
 
@@ -30,12 +31,16 @@ sub _build_feed {
 sub link {
     my $self = shift;
     if (@_) {
-        $self->feed->add_link({ rel => 'alternate', href => $_[0],
+        return $self->feed->add_link({ rel => 'alternate', href => $_[0],
                                   type => 'text/html', });
     } else {
-        my $l = first { !defined $_->rel || $_->rel eq 'alternate' } $self->feed->link;
-        $l ? $l->href : undef;
+        foreach my $link ($self->feed->link) {
+            if (defined $link && ! defined $link->rel || $link->rel eq 'alternate' ) {
+                return $link->href;
+            }
+        }
     }
+    return ();
 }
 
 sub author {

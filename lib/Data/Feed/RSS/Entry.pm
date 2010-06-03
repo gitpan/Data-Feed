@@ -7,6 +7,14 @@ use DateTime::Format::Mail;
 use DateTime::Format::W3CDTF;
 use Scalar::Util ();
 
+has entry => (
+    is => 'rw',
+    isa => 'HashRef',
+    required => 1,
+    lazy_build => 1,
+);
+
+# Apply after has entry, so that title() and updated() are respected
 with 'Data::Feed::Web::Entry';
 
 __PACKAGE__->meta->make_immutable;
@@ -169,11 +177,13 @@ sub enclosures {
 
     my @enclosures;
     for my $enclosure ($self->__enclosures) {
+        delete $enclosure->{length} unless $enclosure->{length};
         push @enclosures, Data::Feed::Web::Enclosure->new(
             %$enclosure
         );
     }
     for my $content ($self->media_contents) {
+        delete $content->{length} unless $content->{length};
         push @enclosures, Data::Feed::Web::Enclosure->new(
             %$content
         );

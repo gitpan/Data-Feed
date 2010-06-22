@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed version="0.3" xmlns="http://purl.org/atom/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="en-us">
+<feed version="0.3" xmlns="http://purl.org/atom/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xml:lang="en-us" xml:base="http://hey.com/">
 <title>First Weblog</title>
 <link rel="alternate" type="text/html" href="http://localhost/weblog/" />
 <modified>2004-05-30T07:39:57Z</modified>
 <tagline>This is a test weblog.</tagline>
 <id>tag:localhost,2004:/weblog//1</id>
+<icon>/favicon.ico</icon>
 <generator url="http://www.movabletype.org/" version="3.0D">Movable Type</generator>
 <copyright>Copyright (c) 2004, Melody</copyright>
 <author>
